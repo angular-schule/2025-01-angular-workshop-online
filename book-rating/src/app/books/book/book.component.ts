@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { Book } from '../shared/book';
 
 @Component({
@@ -8,6 +8,7 @@ import { Book } from '../shared/book';
   styleUrl: './book.component.scss'
 })
 export class BookComponent {
-  // TODO: Wo kommen diese Daten her?
-  book = signal<Book>({ title: '' } as Book)
+  // Input: hier fließen Daten von der Elternkomponente hinein
+  // von oben nach unten
+  book = input.required<Book>();
 }
