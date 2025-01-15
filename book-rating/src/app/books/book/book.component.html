@@ -9,6 +9,6 @@
       </h2>
     </div>
     <p>{{ book().description }}</p>
-    <p>Preis: {{ book().price }}</p>
+    <p>Preis: {{ book().price | currency:'EUR' }}</p>
   </div>
 </div>
