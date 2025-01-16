@@ -19,7 +19,7 @@ export class BookComponent {
   rateUp = output<Book>();
   rateDown = output<Book>();
 
-  doRateUp() {
+  private doRateUp() {
     this.rateUp.emit(this.book());
   }
 
