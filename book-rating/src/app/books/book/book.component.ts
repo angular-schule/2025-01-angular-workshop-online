@@ -12,9 +12,11 @@ import { RatingComponent } from '../rating/rating.component';
 export class BookComponent {
   // Input: hier fließen Daten von der Elternkomponente hinein
   // von oben nach unten
-  book = input.required<Book>();
+  readonly book = input.required<Book>();
+  readonly minRating = input(1);
+  readonly maxRating = input(5);
 
-  // Output: hier fließen Daten von hier zur Elternkomponente
+  // Output: hier fließen Daten zur Elternkomponente hinaus
   // von unten nach oben
   rateUp = output<Book>();
   rateDown = output<Book>();
