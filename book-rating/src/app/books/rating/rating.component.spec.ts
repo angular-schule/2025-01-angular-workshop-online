@@ -14,6 +14,9 @@ describe('RatingComponent', () => {
 
     fixture = TestBed.createComponent(RatingComponent);
     component = fixture.componentInstance;
+
+    fixture.componentRef.setInput('value', 3);
+
     fixture.detectChanges();
   });
 
