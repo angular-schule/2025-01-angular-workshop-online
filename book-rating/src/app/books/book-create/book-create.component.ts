@@ -1,6 +1,10 @@
 import { JsonPipe } from '@angular/common';
-import { Component } from '@angular/core';
-import { Form, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Book } from '../shared/book';
+import { BookStoreService } from '../shared/book-store.service';
+import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-book-create',
@@ -9,6 +13,10 @@ import { Form, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@
   styleUrl: './book-create.component.scss'
 })
 export class BookCreateComponent {
+
+  #bs = inject(BookStoreService);
+  #router = inject(Router);
+
   bookForm = new FormGroup({
     isbn: new FormControl('', {
       nonNullable: true,
@@ -54,5 +62,23 @@ export class BookCreateComponent {
   hasError(control: FormControl, errorCode: string): boolean {
     // Hat dieses Control diesen bestimmten Fehler?
     return control.hasError(errorCode) && control.touched;
+  }
+
+  submitForm() {
+    // Buch erzeugen
+    const newBook: Book = this.bookForm.getRawValue();
+
+    // HTTP
+    this.#bs.create(newBook).subscribe({
+      next: receivedBook => {
+        // alert('Buch wurde angelegt!');
+        // this.bookForm.reset();
+        this.#router.navigate(['/books', receivedBook.isbn]);
+        // this.#router.navigateByUrl('/books/' + receivedBook.isbn);
+      },
+      error: (err: HttpErrorResponse) => {
+        // ...
+      }
+    });
   }
 }
