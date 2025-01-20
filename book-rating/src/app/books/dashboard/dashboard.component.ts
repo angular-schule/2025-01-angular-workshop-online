@@ -46,4 +46,14 @@ export class DashboardComponent {
       }
     }));
   }
+
+  doDelete(book: Book) {
+    if (!confirm('Buch löschen?')) {
+      return;
+    }
+
+    this.#bs.delete(book.isbn).subscribe(() => {
+      this.books.update(books => books.filter(b => b.isbn !== book.isbn));
+    });
+  }
 }
