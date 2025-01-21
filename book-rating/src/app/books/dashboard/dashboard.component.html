@@ -1,3 +1,5 @@
+<p>Datum: {{ currentDate() | date:'full' }}</p>
+
 <p>Anzahl Bücher: {{ books().length }}</p>
 
 @for (b of books(); track b.isbn) {
