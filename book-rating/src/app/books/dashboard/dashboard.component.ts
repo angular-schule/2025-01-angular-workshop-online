@@ -4,6 +4,8 @@ import { BookComponent } from "../book/book.component";
 import { BookRatingService } from '../shared/book-rating.service';
 import { BookStoreService } from '../shared/book-store.service';
 import { DatePipe } from '@angular/common';
+import { interval, map, startWith, timer } from 'rxjs';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,8 +19,13 @@ export class DashboardComponent implements OnDestroy {
   #rs = inject(BookRatingService);
   #bs = inject(BookStoreService);
 
-  readonly currentDate = signal(Date.now());
-  #interval = setInterval(() => this.currentDate.set(Date.now()), 1000);
+  readonly currentDate = toSignal(
+    interval(1000).pipe(
+      map(() => Date.now()),
+      startWith(Date.now())
+    ),
+    { requireSync: true }
+  );
 
   constructor() {
     this.#bs.getAll().subscribe(books => {
@@ -62,6 +69,6 @@ export class DashboardComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    clearInterval(this.#interval);
+    // clearInterval(this.#interval);
   }
 }
