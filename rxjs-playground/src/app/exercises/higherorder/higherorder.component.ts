@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { Subject, ReplaySubject, Observable, map, mergeAll, mergeMap, concatMap, switchMap, exhaustMap } from 'rxjs';
+import { Subject, ReplaySubject, Observable, map, mergeAll, mergeMap, concatMap, switchMap, exhaustMap, flatMap } from 'rxjs';
 
 import { HistoryComponent } from '../../shared/history/history.component';
 import { EchoService } from './echo.service';
@@ -31,6 +31,7 @@ export class HigherorderComponent {
     /**************!!**************/
 
     this.result$ = this.source$.pipe(
+      exhaustMap(tier => this.#es.echo(tier))
     );
 
     /**************!!**************/
