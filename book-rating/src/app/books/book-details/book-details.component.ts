@@ -3,7 +3,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Book } from '../shared/book';
 import { BookStoreService } from '../shared/book-store.service';
 import { map, switchMap } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { AsyncPipe, JsonPipe } from '@angular/common';
 
 @Component({
@@ -16,12 +16,10 @@ export class BookDetailsComponent {
   #route = inject(ActivatedRoute);
   #bs = inject(BookStoreService);
 
-  readonly book = signal<Book | undefined>(undefined);
-
-  book$ = this.#route.paramMap.pipe(
+  readonly book = toSignal(this.#route.paramMap.pipe(
     map(params => params.get('isbn')!),
     switchMap(isbn => this.#bs.getSingle(isbn))
-  );
+  ));
 
   constructor() {
     // PULL
