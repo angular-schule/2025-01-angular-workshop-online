@@ -1,7 +1,13 @@
-@if (book(); as b) {
+@if (book$ | async; as b) {
   <h2>{{ b.title }}</h2>
   <p>{{ b.description }}</p>
 }
+
+
+<!--@if (book(); as b) {
+  <h2>{{ b.title }}</h2>
+  <p>{{ b.description }}</p>
+}-->
 
 <a routerLink="/books">Zum Dashboard</a><br>
 <a routerLink="/books/9783864906466">Zum Angular-Buch</a>
