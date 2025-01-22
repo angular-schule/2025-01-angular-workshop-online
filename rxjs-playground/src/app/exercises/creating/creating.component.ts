@@ -25,6 +25,7 @@ export class CreatingComponent {
 
 
     // of('Hamburg', 'Zürich', 'Wien', 'Leipzig', 'Köln')
+    // of ({foo: 'bar'})
     // from([1,2,3,4,5,6])
     // interval(1000)         // ---0---1---2---3---4---5---6 ...
     // timer(3000)            // ---------0|
@@ -51,8 +52,19 @@ export class CreatingComponent {
       sub.next(result2);
       sub.next(10);
 
-      setTimeout(() => sub.next(100), 1000)
-      setTimeout(() => sub.complete(), 3000)
+      // setTimeout(() => sub.next(100), 1000)
+      // setTimeout(() => sub.complete(), 3000)
+
+      const interval = setInterval(() => {
+        sub.next(Date.now());
+        console.log('LOG', Date.now());
+      }, 1000)
+
+      // Teardown Logic
+      return () => {
+        console.log('TEARDOWN');
+        clearInterval(interval);
+      };
     }
 
     // Observer: hört von außen zu,
@@ -68,7 +80,13 @@ export class CreatingComponent {
     // Observable: wrappt den Producer
     // Schnittstelle zwischen Producer und Observer
     const myObs$ = new Observable(producer)
-    // myObs$.subscribe(obs);
+    const myObs2$ = new Observable(sub => {
+      sub.next(5);
+      return () => {}
+    })
+
+    const subscription = myObs$.subscribe(obs);
+    setTimeout(() => subscription.unsubscribe(), 5000)
 
     // $: Finnische Notation
 

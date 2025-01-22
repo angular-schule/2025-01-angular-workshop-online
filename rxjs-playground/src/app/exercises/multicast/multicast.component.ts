@@ -26,6 +26,7 @@ export class MulticastComponent implements OnDestroy {
 
     this.measureValues$ = new ReplaySubject(5);
 
+    // this.measureValues$.next(1000);
     this.#mvs.getValues().subscribe(this.measureValues$);
 
     /**************!!**************/
