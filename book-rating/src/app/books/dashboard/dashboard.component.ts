@@ -6,6 +6,9 @@ import { BookStoreService } from '../shared/book-store.service';
 import { DatePipe } from '@angular/common';
 import { interval, map, startWith, timer } from 'rxjs';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { Store } from '@ngrx/store';
+import { BookActions } from '../store/book.actions';
+import { selectBooks } from '../store/book.selectors';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,7 +17,8 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnDestroy {
-  books = signal<Book[]>([]);
+  #store = inject(Store);
+  books = this.#store.selectSignal(selectBooks);// signal<Book[]>([]);
 
   #rs = inject(BookRatingService);
   #bs = inject(BookStoreService);
@@ -28,9 +32,11 @@ export class DashboardComponent implements OnDestroy {
   );
 
   constructor() {
-    this.#bs.getAll().subscribe(books => {
+    this.#store.dispatch(BookActions.loadBooks());
+
+    /*this.#bs.getAll().subscribe(books => {
       this.books.set(books);
-    });
+    });*/
   }
 
   doRateUp(book: Book) {
@@ -49,13 +55,13 @@ export class DashboardComponent implements OnDestroy {
 
     // this.books.set(this.books().map(b => b.isbn === ratedBook.isbn ? ratedBook : b))
 
-    this.books.update(books => books.map(b => {
+    /*this.books.update(books => books.map(b => {
       if (b.isbn === ratedBook.isbn) {
         return ratedBook;
       } else {
         return b
       }
-    }));
+    }));*/
   }
 
   doDelete(book: Book) {
@@ -63,9 +69,9 @@ export class DashboardComponent implements OnDestroy {
       return;
     }
 
-    this.#bs.delete(book.isbn).subscribe(() => {
+    /*this.#bs.delete(book.isbn).subscribe(() => {
       this.books.update(books => books.filter(b => b.isbn !== book.isbn));
-    });
+    });*/
   }
 
   ngOnDestroy(): void {
