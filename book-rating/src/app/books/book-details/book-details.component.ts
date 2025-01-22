@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Book } from '../shared/book';
 import { BookStoreService } from '../shared/book-store.service';
+import { map, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-book-details',
@@ -20,12 +21,11 @@ export class BookDetailsComponent {
     // const isbn = this.#route.snapshot.paramMap.get('isbn'); // path: 'books/:isbn'
 
     // PUSH
-    // TODO: Verschachtelte Subscription
-    this.#route.paramMap.subscribe(params => {
-      const isbn = params.get('isbn')!; // Non-Null Assertion
-      this.#bs.getSingle(isbn).subscribe(book => {
-        this.book.set(book);
-      });
+    this.#route.paramMap.pipe(
+      map(params => params.get('isbn')!),
+      switchMap(isbn => this.#bs.getSingle(isbn))
+    ).subscribe(book => {
+      this.book.set(book);
     });
   }
 }
